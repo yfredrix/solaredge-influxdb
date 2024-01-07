@@ -2,6 +2,7 @@ from .models import MeterDataResponse
 from .client import SolarEdgeClient
 from datetime import datetime
 from loguru import logger
+from typing import Union, List
 
 
 class Meter(SolarEdgeClient):
@@ -12,9 +13,9 @@ class Meter(SolarEdgeClient):
         self,
         start_time: datetime,
         end_time: datetime,
-        time_unit: str | None = None,
-        meters: list[str] | None = None,
-    ) -> MeterDataResponse | None:
+        time_unit: Union[str, None] = None,
+        meters: Union[List[str], None] = None,
+    ) -> Union[MeterDataResponse, None]:
         """
         Retrieves meter data from the SolarEdge API for the specified time range.
 

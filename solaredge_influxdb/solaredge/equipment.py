@@ -9,15 +9,18 @@ from .models import (
 )
 from loguru import logger
 from requests import Response
+from typing import Union, Dict, List
 
 import os
 import json
 
 
 class Equipment(SolarEdgeClient):
-    query_params: dict[str, str]
+    query_params: Dict[str, str]
 
-    def __init__(self, api_key: str, inverters: list[Inverter] | None = None) -> None:
+    def __init__(
+        self, api_key: str, inverters: Union[List[Inverter], None] = None
+    ) -> None:
         super().__init__(api_key)
         self.query_params = {"api_key": self.api_key}
         if not inverters:
@@ -27,7 +30,7 @@ class Equipment(SolarEdgeClient):
     def get_request(cls, url: str) -> Response:
         return cls.session.get(url, params=cls.query_params)
 
-    def get_inverters(self) -> list[Inverter]:
+    def get_inverters(self) -> List[Inverter]:
         """Get list of inverters from SolarEdge API or from disk"""
         if os.path.isfile("inverters.json"):
             with open("inverters.json", "r") as f:
@@ -41,7 +44,7 @@ class Equipment(SolarEdgeClient):
         logger.error("Failed to retrieve inverters")
         raise AttributeError("Inverters must be defined and valid")
 
-    def get_components(self) -> ComponentsListResponse | None:
+    def get_components(self) -> Union[ComponentsListResponse, None]:
         """Collect the components list from your site.
         Inputs:
             solarEdgeClient: The solarEdgeClient object you created earlier.
@@ -89,7 +92,7 @@ class Equipment(SolarEdgeClient):
         logger.error(f"Failed to get components for site {self.site_id}")
         return None
 
-    def get_inventory(self) -> InventoryResponse | None:
+    def get_inventory(self) -> Union[InventoryResponse, None]:
         """Collect the inventory data from your site.
         Inputs:
             solarEdgeClient: The solarEdgeClient object you created earlier.
@@ -179,7 +182,7 @@ class Equipment(SolarEdgeClient):
         inverter_id: str,
         start_time: datetime,
         end_time: datetime,
-    ) -> TelemetryResponse | None:
+    ) -> Union[TelemetryResponse, None]:
         """Collect the technical data from the inverter within your site.
         Inputs:
             solarEdgeClient: The solarEdgeClient object you created earlier.
@@ -265,7 +268,7 @@ class Equipment(SolarEdgeClient):
     def get_change_log(
         self,
         serial_number: str,
-    ) -> ChangeLogResponse | None:
+    ) -> Union[ChangeLogResponse, None]:
         """Collect the change log data from the equipment within your site.
         Inputs:
             solarEdgeClient: The solarEdgeClient object you created earlier.

@@ -4,6 +4,7 @@ from urllib3.util import Retry
 from requests import Session
 from requests.adapters import HTTPAdapter
 from loguru import logger
+from typing import Union
 
 from .site import list_sites
 
@@ -11,7 +12,7 @@ from .site import list_sites
 class SolarEdgeClient:
     url = "https://monitoringapi.solaredge.com"
 
-    def __init__(self, api_key: str, site_id: int | None = None):
+    def __init__(self, api_key: str, site_id: Union[int, None] = None):
         self.api_key = api_key
         self.session = Session()
         self.__init_session()

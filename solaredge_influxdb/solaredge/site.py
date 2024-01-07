@@ -1,8 +1,9 @@
+from typing import Union
 from .models import SitesResponse
 from loguru import logger
 
 
-def list_sites(SolarEdgeClient) -> SitesResponse | None:
+def list_sites(SolarEdgeClient) -> Union[SitesResponse, None]:
     """ "Request a list of sites from SolarEdge API"""
 
     url = f"{SolarEdgeClient.url}/sites/list"
