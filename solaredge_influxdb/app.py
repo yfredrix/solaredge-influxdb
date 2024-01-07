@@ -37,7 +37,7 @@ def app(
         for inverter in EquipmentClient.inverters:
             tech_data = EquipmentClient.get_technical_data(
                 inverter.serialNumber,
-                current_time - timedelta(hours=12, minutes=15),
+                current_time - timedelta(minutes=15),
                 current_time,
             )
             if tech_data is None:
