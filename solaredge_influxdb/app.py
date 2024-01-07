@@ -29,9 +29,11 @@ def app(
         )
     InfluxClient = InfluxDBClient(config_path)
 
-    if current_time > sunrise + timedelta(
-        minutes=additional_time_window
-    ) or current_time < sunset - timedelta(minutes=additional_time_window):
+    if (
+        sunrise - timedelta(minutes=additional_time_window)
+        < current_time
+        < sunset + timedelta(minutes=additional_time_window)
+    ):
         EquipmentClient = Equipment(api_key)
         MeterClient = Meter(api_key)
 
