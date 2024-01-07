@@ -1,7 +1,7 @@
 from loguru import logger
 from argparse import ArgumentParser
 
-from solaredge_influxdb.app import app
+from solaredge_influxdb import app
 
 parser = ArgumentParser()
 parser.add_argument(

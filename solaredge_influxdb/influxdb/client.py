@@ -1,6 +1,7 @@
 from datetime import datetime
 import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
+from typing import Union, List, Tuple, Optional
 
 
 class InfluxDBClient:
@@ -16,8 +17,8 @@ class InfluxDBClient:
         self,
         time: datetime,
         measurement: str,
-        field_values: list[tuple[str, str | int | float]],
-        tags: list[tuple[str, str]] | None = None,
+        field_values: List[Tuple[str, Union[str, int, float]]],
+        tags: Optional[List[Tuple[str, str]]] = None,
     ) -> influxdb_client.Point:
         """Convert a dictionary to an InfluxDB point"""
         if tags is None:
