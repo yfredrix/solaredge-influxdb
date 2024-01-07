@@ -20,6 +20,7 @@ def app(
     try:
         sunrise = sun.get_sunrise_time()
         sunset = sun.get_sunset_time()
+        logger.debug(f"Sunrise: {sunrise}, Sunset: {sunset}")
 
     except SunTimeException:
         logger.error("Failed to retrieve sunrise/sunset times")
@@ -81,3 +82,5 @@ def app(
                 InfluxClient.write(energy_point, "energy")
                 InfluxClient.write(power_point, "energy_flow")
                 InfluxClient.write(voltage_point, "voltage_current")
+    else:
+        logger.info("It's dark outside, no need to collect data")
