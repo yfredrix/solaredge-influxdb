@@ -14,7 +14,7 @@ loguru = "^0.7.2"
 suntime = "^1.2.5"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.12.1"
+black = "^24.1.1"
 pytest = "^8.0.0"
 
 [build-system]
