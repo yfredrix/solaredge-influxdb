@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.9"
 requests = "^2.31.0"
-influxdb-client = "^1.39.0"
+influxdb-client = "^1.40.0"
 pydantic = "^2.6.0"
 loguru = "^0.7.2"
 suntime = "^1.2.5"
