@@ -219,13 +219,13 @@ files = [
 
 [[package]]
 name = "influxdb-client"
-version = "1.39.0"
+version = "1.40.0"
 description = "InfluxDB 2.0 Python client library"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "influxdb_client-1.39.0-py3-none-any.whl", hash = "sha256:35c4d73713b6b7d30ca5ebaf74b7d53217fb6c58cdec63484e529b43d26f061e"},
-    {file = "influxdb_client-1.39.0.tar.gz", hash = "sha256:6a534913523bd262f1928e4ff80046bf95e313c1694ce13e45fd17eea90fe691"},
+    {file = "influxdb_client-1.40.0-py3-none-any.whl", hash = "sha256:7aa115506a8ec89d10ff6e4d729cb0c78ca223a1f1b03412a7ad988da9011089"},
+    {file = "influxdb_client-1.40.0.tar.gz", hash = "sha256:027f970af1518479d8806f1cdf5ba20280f943e1b621c2acdbf9ca8dc9bdf1cb"},
 ]
 
 [package.dependencies]
@@ -239,7 +239,7 @@ urllib3 = ">=1.26.0"
 async = ["aiocsv (>=1.2.2)", "aiohttp (>=3.8.1)"]
 ciso = ["ciso8601 (>=2.1.1)"]
 extra = ["numpy", "pandas (>=0.25.3)"]
-test = ["aioresponses (>=0.7.3)", "coverage (>=4.0.3)", "flake8 (>=5.0.3)", "httpretty (==1.0.5)", "jinja2 (==3.1.2)", "nose (>=1.3.7)", "pluggy (>=0.3.1)", "psutil (>=5.6.3)", "py (>=1.4.31)", "pytest (>=5.0.0)", "pytest-cov (>=3.0.0)", "pytest-timeout (>=2.1.0)", "randomize (>=0.13)", "sphinx (==1.8.5)", "sphinx-rtd-theme"]
+test = ["aioresponses (>=0.7.3)", "coverage (>=4.0.3)", "flake8 (>=5.0.3)", "httpretty (==1.0.5)", "jinja2 (==3.1.3)", "nose (>=1.3.7)", "pluggy (>=0.3.1)", "psutil (>=5.6.3)", "py (>=1.4.31)", "pytest (>=5.0.0)", "pytest-cov (>=3.0.0)", "pytest-timeout (>=2.1.0)", "randomize (>=0.13)", "sphinx (==1.8.5)", "sphinx-rtd-theme"]
 
 [[package]]
 name = "iniconfig"
@@ -610,4 +610,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "41bc42f8bbab6f09c7fe0d70cc36f4f633aea53fe68bae78d56c2b3536002285"
+content-hash = "bcf262520b6245cfad5ae6235c1c72a4e4542fa1e333cfcaeac4d5998bff692f"
