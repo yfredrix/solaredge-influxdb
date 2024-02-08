@@ -58,7 +58,7 @@ def app(
                     telemetry.date,
                     "solar",
                     [
-                        ("total_energy", telemetry.totalEnergy),
+                        ("total_energy", telemetry.totalEnergy / 1000),
                     ],
                     tags,
                 )
@@ -66,7 +66,7 @@ def app(
                     telemetry.date,
                     "solar",
                     [
-                        ("ac_power", telemetry.totalActivePower),
+                        ("ac_power", telemetry.totalActivePower / 1000),
                     ],
                     tags,
                 )
