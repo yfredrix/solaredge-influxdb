@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "solaredge-influxdb"
-version = "0.1.0"
+version = "1.0.0"
 description = "Ability to get data from the solar edge api into a influxdb"
 authors = ["Yorick Fredrix <yorick.fredrix@outlook.com>"]
 readme = "README.md"
@@ -17,6 +17,17 @@ suntime = "^1.2.5"
 black = "^24.2.0"
 pytest = "^8.0.1"
 flake8 = "^7.0.0"
+
+[tool.semantic_release]
+version_toml = [
+    "pyproject.toml:tool.poetry.version"
+]
+
+branch = "main"
+upload_to_PyPI = true
+upload_to_release = true
+build_command = "pip install poetry && poetry build"
+commit_author = "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
 
 [build-system]
 requires = ["poetry-core"]
