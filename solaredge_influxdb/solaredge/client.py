@@ -11,10 +11,10 @@ from .site import list_sites
 
 class SolarEdgeClient:
     url = "https://monitoringapi.solaredge.com"
+    session = Session()
 
     def __init__(self, api_key: str, site_id: Union[int, None] = None):
         self.api_key = api_key
-        self.session = Session()
         self.__init_session()
         if not site_id:
             site_id = self.get_site()
