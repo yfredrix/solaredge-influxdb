@@ -5,7 +5,9 @@ from solaredge_influxdb.solaredge.client import SolarEdgeClient
 
 class TestSolarEdgeClient:
 
-    def test_init_session(self):
+    @patch("solaredge_influxdb.solaredge.client.list_sites")
+    def test_init_session(self, mock_list_sites):
+        mock_list_sites.return_value = Mock(count=1, site=[Mock(id=123)])
         client = SolarEdgeClient("api_key")
         assert client.session.headers["Accept"] == "application/json"
 
