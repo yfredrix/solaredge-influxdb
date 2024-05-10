@@ -1,10 +1,9 @@
-from datetime import datetime
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, NaiveDatetime
 
 
 class TelemetryData(BaseModel):
-    date: datetime
+    date: NaiveDatetime
     totalActivePower: Optional[float]
     dcVoltage: Optional[float]
     groundFaultResistance: Optional[float] = None

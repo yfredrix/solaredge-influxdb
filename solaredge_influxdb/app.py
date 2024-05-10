@@ -1,6 +1,7 @@
 import os
 from suntime import Sun, SunTimeException
 from datetime import datetime, timedelta, timezone
+import pytz
 from loguru import logger
 
 from solaredge_influxdb.solaredge import Equipment, Meter
@@ -54,8 +55,9 @@ def app(
                     ("operation_mode", telemetry.operationMode),
                     ("inverter_mode", telemetry.inverterMode),
                 ]
+                telemetry_date = telemetry.date.replace(tz_info=pytz.timezone('Europe/Amsterdam'))
                 energy_point = InfluxClient.convert_to_point(
-                    telemetry.date,
+                    telemetry_date,
                     "solar",
                     [
                         ("total_energy", telemetry.totalEnergy / 1000),
@@ -63,7 +65,7 @@ def app(
                     tags,
                 )
                 power_point = InfluxClient.convert_to_point(
-                    telemetry.date,
+                    telemetry_date,
                     "solar",
                     [
                         ("ac_power", telemetry.totalActivePower / 1000),
@@ -71,7 +73,7 @@ def app(
                     tags,
                 )
                 voltage_point = InfluxClient.convert_to_point(
-                    telemetry.date,
+                    telemetry_date,
                     "solar",
                     [
                         ("dc_voltage", telemetry.dcVoltage),
