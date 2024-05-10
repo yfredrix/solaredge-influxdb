@@ -14,6 +14,7 @@ def app(
     longitude: float = os.getenv("LONGITUDE", 4.9041),
     api_key: str = os.getenv("API_KEY"),
     additional_time_window: int = 30,
+    timezone_str: str = "Europe/Amsterdam",
 ):
     sun = Sun(latitude, longitude)
     current_time = datetime.now(timezone.utc)
@@ -29,6 +30,7 @@ def app(
             "Application requires sunset and sunrise times to prevent unnecessary API calls"
         )
     InfluxClient = InfluxDBClient(config_path)
+    _timezone = pytz.timezone(timezone_str)
 
     if (
         sunrise - timedelta(minutes=additional_time_window)
@@ -37,7 +39,7 @@ def app(
     ):
         EquipmentClient = Equipment(api_key)
         MeterClient = Meter(api_key)
-
+        current_time = current_time.astimezone(_timezone)
         for inverter in EquipmentClient.inverters:
             tech_data = EquipmentClient.get_technical_data(
                 inverter.serialNumber,
@@ -55,7 +57,7 @@ def app(
                     ("operation_mode", telemetry.operationMode),
                     ("inverter_mode", telemetry.inverterMode),
                 ]
-                telemetry_date = telemetry.date.replace(tz_info=pytz.timezone('Europe/Amsterdam'))
+                telemetry_date = _timezone.localize(telemetry.date)
                 energy_point = InfluxClient.convert_to_point(
                     telemetry_date,
                     "solar",
@@ -88,3 +90,4 @@ def app(
                 InfluxClient.write(voltage_point, "voltage_current")
     else:
         logger.info("It's dark outside, no need to collect data")
+
