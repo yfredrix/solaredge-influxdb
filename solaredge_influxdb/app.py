@@ -37,6 +37,7 @@ def app(
         < current_time
         < sunset + timedelta(minutes=additional_time_window)
     ):
+        logger.debug("The Sun is shining bright, let's collect some data!")
         EquipmentClient = Equipment(api_key)
         MeterClient = Meter(api_key)
         current_time = current_time.astimezone(_timezone)
@@ -90,4 +91,3 @@ def app(
                 InfluxClient.write(voltage_point, "voltage_current")
     else:
         logger.info("It's dark outside, no need to collect data")
-
