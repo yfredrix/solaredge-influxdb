@@ -13,7 +13,7 @@ def app(
     latitude: float = os.getenv("LATITUDE", 52.3676),
     longitude: float = os.getenv("LONGITUDE", 4.9041),
     api_key: str = os.getenv("API_KEY"),
-    additional_time_window: int = 30,
+    additional_time_window: int = 60,
     timezone_str: str = "Europe/Amsterdam",
 ):
     sun = Sun(latitude, longitude)
