@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "solaredge-influxdb"
-version = "1.3.0"
+version = "1.4.0"
 description = "Ability to get data from the solar edge api into a influxdb"
 authors = ["Yorick Fredrix <yorick.fredrix@outlook.com>"]
 readme = "README.md"
