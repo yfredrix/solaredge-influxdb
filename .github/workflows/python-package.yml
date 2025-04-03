@@ -45,7 +45,7 @@ jobs:
       uses: actions/checkout@v3
     
     - name: Startup InfluxDB Docker container
-      run: docker run -name influx -d -p 8086:8086 influxdb:latest
+      run: docker run --name influx -d -p 8086:8086 influxdb:latest
       env:
         DOCKER_INFLUXDB_INIT_MODE: "setup"
         DOCKER_INFLUXDB_INIT_USERNAME: "admin"
