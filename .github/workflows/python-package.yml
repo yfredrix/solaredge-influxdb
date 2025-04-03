@@ -65,7 +65,7 @@ jobs:
     - name: Read Admin Token
       id: read_admin_token
       run: |
-        echo "INFLUXDB_ADMIN_TOKEN=$(docker exec influx influx auth list --all | grep admin | awk '{print $2}')" >> $GITHUB_ENV
+        echo "INFLUXDB_ADMIN_TOKEN=$(docker exec influx influx auth list --org test-org | grep admin | awk '{print $4}')" >> $GITHUB_ENV
     
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
@@ -108,6 +108,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Python Semantic Release
       id: python_semantic_release

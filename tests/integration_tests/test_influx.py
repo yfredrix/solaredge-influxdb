@@ -12,10 +12,10 @@ def create_influx_config() -> None:
     with open("tests/integration_tests/test_config.toml", "w") as f:
         f.write(
             f"""
-            [influxdb]
+            [influx2]
             url = "http://localhost:8086"
-            token = {os.getenv("INFLUXDB_ADMIN_TOKEN")}
             org = "test-org"
+            token = {os.getenv("INFLUXDB_ADMIN_TOKEN")}
             """
         )
 
