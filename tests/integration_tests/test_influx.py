@@ -1,6 +1,7 @@
 from solaredge_influxdb.influxdb import InfluxDBClient
 
 from influxdb_client.client.query_api import QueryApi
+from datetime import datetime, timedelta
 
 import pytest
 import os
@@ -22,12 +23,13 @@ def create_influx_config() -> None:
 
 def test_write_api(create_influx_config) -> None:
     """Test the write API of InfluxDB"""
-    from datetime import datetime
 
     InfluxClient = InfluxDBClient("tests/integration_tests/test_config.toml")
 
+    event_time = datetime.now() + timedelta(minutes=-15)
+
     test_data = InfluxClient.convert_to_point(
-        datetime(2023, 10, 1, 0, 0, 0),
+        event_time,
         "test_measurement",
         [("field1", 123), ("field2", 456)],
         [("tag1", "value1"), ("tag2", "value2")],
@@ -38,7 +40,7 @@ def test_write_api(create_influx_config) -> None:
 
     influxQueryAPI: QueryApi = InfluxClient.client.query_api()
     result = influxQueryAPI.query(
-        'from(bucket: "test") |> filter(fn: (r) => r._measurement == "test_measurement")'
+        'from(bucket: "test") |> range(start: -1h) |> filter(fn: (r) => r._measurement == "test_measurement")'
     )
     output = result.to_values(columns=["_time", "_measurement", "_field", "_value"])
     assert len(output) > 0, "No data returned from InfluxDB query."
@@ -47,5 +49,5 @@ def test_write_api(create_influx_config) -> None:
     assert output[0][3] == 123, "Field value does not match."
     assert output[1][2] == "field2", "Field name does not match."
     assert output[1][3] == 456, "Field value does not match."
-    assert output[0][0] == datetime(2023, 10, 1, 0, 0, 0), "Time does not match."
+    assert output[0][0] == event_time, "Time does not match."
     print("Test data verified successfully.")
