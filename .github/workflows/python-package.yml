@@ -54,7 +54,7 @@ jobs:
           sleep 2
         done
         # Create the InfluxDB Config
-        docker exec influx influx config create --active -n default -u http://localhost --org test-org -p $DOCKER_INFLUXDB_INIT_USERNAME:$DOCKER_INFLUXDB_INIT_PASSWORD
+        docker exec influx influx config create --active -n default -u http://localhost:8086 --org test-org -p $DOCKER_INFLUXDB_INIT_USERNAME:$DOCKER_INFLUXDB_INIT_PASSWORD
         echo "INFLUXDB_ADMIN_TOKEN=$(docker exec influx influx auth list --org test-org | grep admin | awk '{print $4}')" >> $GITHUB_ENV
       env:
         DOCKER_INFLUXDB_INIT_MODE: "setup"
