@@ -38,7 +38,7 @@ def test_write_api(create_influx_config) -> None:
 
     influxQueryAPI: QueryApi = InfluxClient.client.query_api()
     result = influxQueryAPI.query(
-        'from(bucket: "test") |> range(start: -1h) |> filter(fn: (r) => r._measurement == "test_measurement")'
+        'from(bucket: "test") |> filter(fn: (r) => r._measurement == "test_measurement")'
     )
     output = result.to_values(columns=["_time", "_measurement", "_field", "_value"])
     assert len(output) > 0, "No data returned from InfluxDB query."
