@@ -1,9 +1,12 @@
 # CHANGELOG
 
 
-## v1.4.0 (2025-04-03)
+## v1.4.0 (2025-04-04)
 
 ### Bug Fixes
+
+- Changed startup InfluxDB to be in one step
+  ([`e5108cc`](https://github.com/yfredrix/solaredge-influxdb/commit/e5108cc4959ef5c85558d5ee1a0b44a5872de33f))
 
 - Command in pipeline
   ([`4a9cb42`](https://github.com/yfredrix/solaredge-influxdb/commit/4a9cb42275d167835098201f2c956938d61c1bb3))
