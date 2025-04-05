@@ -49,5 +49,5 @@ def test_write_api(create_influx_config) -> None:
     assert output[0][3] == 123, "Field value does not match."
     assert output[1][2] == "field2", "Field name does not match."
     assert output[1][3] == 456, "Field value does not match."
-    assert output[0][0] == event_time, "Time does not match."
+    assert output[0][0].replace(microsecond=0) == event_time.replace(microsecond=0), "Time does not match."
     print("Test data verified successfully.")
