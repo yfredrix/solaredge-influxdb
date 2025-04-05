@@ -46,20 +46,35 @@ jobs:
     
     - name: Startup InfluxDB Docker container
       run: |
-        docker run --name influx -d -p 8086:8086 influxdb:latest
-        for i in {1..30}; do
-          if curl -s http://localhost:8086/ping; then
-            break
-          fi
-          sleep 2
-        done
-        echo "INFLUXDB_ADMIN_TOKEN=$(docker exec influx influx auth list --org test-org | grep admin | awk '{print $4}')" >> $GITHUB_ENV
+        docker run -d \
+          --name influx \
+          -p 8086:8086 \
+          -e DOCKER_INFLUXDB_INIT_MODE=setup \
+          -e DOCKER_INFLUXDB_INIT_USERNAME=admin \
+          -e DOCKER_INFLUXDB_INIT_PASSWORD=password \
+          -e DOCKER_INFLUXDB_INIT_ORG=test-org \
+          -e DOCKER_INFLUXDB_INIT_BUCKET=test \
+          influxdb:latest
       env:
         DOCKER_INFLUXDB_INIT_MODE: "setup"
         DOCKER_INFLUXDB_INIT_USERNAME: "admin"
         DOCKER_INFLUXDB_INIT_PASSWORD: "password"
         DOCKER_INFLUXDB_INIT_ORG: "test-org"
         DOCKER_INFLUXDB_INIT_BUCKET: "test"
+
+
+    - name: Wait for InfluxDB to be ready
+      run: |
+        for i in {1..30}; do
+          if curl -s http://localhost:8086/ping; then
+            break
+          fi
+          sleep 2
+        done
+    
+    - name: Collect InfluxDB Admin Token
+      run: |
+        echo "INFLUXDB_ADMIN_TOKEN=$(docker exec influx influx auth list --org test-org | grep admin | awk '{print $4}')" >> $GITHUB_ENV
         
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
@@ -79,7 +94,7 @@ jobs:
         
   build_and_publish:
     if: github.ref == 'refs/heads/main'
-    needs: test
+    needs: integrationTest
     environment: release
     runs-on: ubuntu-latest
     permissions:
@@ -97,7 +112,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         push: "true"
-        root_options: -vv
+        root_options: -v
 
     - name: pypi-publish
       if: ${{ steps.python_semantic_release.outputs.released == 'true' }}
