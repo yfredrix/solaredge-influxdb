@@ -1,10 +1,11 @@
 from solaredge_influxdb.influxdb import InfluxDBClient
 
 from influxdb_client.client.query_api import QueryApi
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, tzinfo
 
 import pytest
 import os
+import pytz
 
 
 @pytest.fixture(scope="module")
@@ -26,7 +27,7 @@ def test_write_api(create_influx_config) -> None:
 
     InfluxClient = InfluxDBClient("tests/integration_tests/test_config.toml")
 
-    event_time = datetime.now() + timedelta(minutes=-15)
+    event_time = datetime.now().replace(tzinfo=pytz.utc) + timedelta(minutes=-15)
 
     test_data = InfluxClient.convert_to_point(
         event_time,
