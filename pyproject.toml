@@ -12,7 +12,7 @@ influxdb-client = "^1.40.0"
 pydantic = "^2.6.1"
 loguru = "^0.7.2"
 suntime = "^1.2.5"
-pytz = "^2024.1"
+pytz = ">=2024.1,<2026.0"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=24.2,<26.0"
