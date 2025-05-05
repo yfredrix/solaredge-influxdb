@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.4.2 (2025-05-05)
+
+### Bug Fixes
+
+- Bump pytz from 2024.1 to 2025.2 ([#40](https://github.com/yfredrix/solaredge-influxdb/pull/40),
+  [`7e7fb5b`](https://github.com/yfredrix/solaredge-influxdb/commit/7e7fb5b9550aaf66e261357d74e6ecee67d951bc))
+
+
 ## v1.4.1 (2025-04-05)
 
 ### Bug Fixes
