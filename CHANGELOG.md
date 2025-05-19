@@ -1,6 +1,32 @@
 # CHANGELOG
 
 
+## v1.4.3 (2025-05-19)
+
+### Bug Fixes
+
+- Bump setuptools from 70.0.0 to 78.1.1 in the pip group
+  ([#44](https://github.com/yfredrix/solaredge-influxdb/pull/44),
+  [`be9d1b7`](https://github.com/yfredrix/solaredge-influxdb/commit/be9d1b7f7c58d2ec25b713d8714fa230da1ba685))
+
+Bumps the pip group with 1 update: [setuptools](https://github.com/pypa/setuptools).
+
+Updates `setuptools` from 70.0.0 to 78.1.1 - [Release
+  notes](https://github.com/pypa/setuptools/releases) -
+  [Changelog](https://github.com/pypa/setuptools/blob/main/NEWS.rst) -
+  [Commits](https://github.com/pypa/setuptools/compare/v70.0.0...v78.1.1)
+
+--- updated-dependencies: - dependency-name: setuptools dependency-version: 78.1.1
+
+dependency-type: indirect
+
+dependency-group: pip ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+
+
 ## v1.4.2 (2025-05-05)
 
 ### Bug Fixes
