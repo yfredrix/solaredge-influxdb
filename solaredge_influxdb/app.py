@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta, timezone
 from astral import Observer
-from astral.sun import sun
+from astral.sun import sunrise as get_sunrise, sunset as get_sunset
 import pytz
 from loguru import logger
 
@@ -20,17 +20,17 @@ def app(
     observer = Observer(latitude=latitude, longitude=longitude)
     current_time = datetime.now(timezone.utc)
     logger.debug(f"Current time: {current_time}")
+    _timezone = pytz.timezone(timezone_str)
+    local_date = current_time.astimezone(_timezone).date()
     try:
-        sun_times = sun(observer, date=current_time.date(), tzinfo=timezone.utc)
-        sunrise = sun_times["sunrise"]
-        sunset = sun_times["sunset"]
+        sunrise = get_sunrise(observer, date=local_date, tzinfo=_timezone)
+        sunset = get_sunset(observer, date=local_date, tzinfo=_timezone)
         logger.debug(f"Sunrise: {sunrise}, Sunset: {sunset}")
 
     except ValueError as e:
         logger.error("Failed to retrieve sunrise/sunset times")
         raise RuntimeError("Application requires sunset and sunrise times to prevent unnecessary API calls") from e
     InfluxClient = InfluxDBClient(config_path)
-    _timezone = pytz.timezone(timezone_str)
 
     if sunrise - timedelta(minutes=additional_time_window) < current_time < sunset + timedelta(minutes=additional_time_window):
         logger.debug("The Sun is shining bright, let's collect some data!")
