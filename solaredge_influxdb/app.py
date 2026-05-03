@@ -81,7 +81,7 @@ def app(
                 if telemetry.dcVoltage is not None:
                     voltage_fields.insert(0, ("dc_voltage", telemetry.dcVoltage))
                 else:
-                    logger.warning(f"dcVoltage is missing for inverter {inverter.serialNumber} at {telemetry_date}")
+                    logger.warning(f"dcVoltage is missing for inverter {inverter.serialNumber} at {telemetry_date}, excluding dc_voltage field")
                 voltage_point = InfluxClient.convert_to_point(
                     telemetry_date,
                     "solar",
