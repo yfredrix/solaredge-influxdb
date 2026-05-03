@@ -2,28 +2,36 @@ from solaredge_influxdb.influxdb import InfluxDBClient
 
 from influxdb_client.client.query_api import QueryApi
 from datetime import datetime, timedelta, tzinfo
+import socket
 
 import pytest
 import os
 import pytz
 
 
+def _is_port_open(host: str, port: int, timeout: float = 0.5) -> bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.settimeout(timeout)
+        return sock.connect_ex((host, port)) == 0
+
+
 @pytest.fixture(scope="module")
 def create_influx_config() -> None:
     """Create a config file for InfluxDB"""
     with open("tests/integration_tests/test_config.toml", "w") as f:
-        f.write(
-            f"""
+        f.write(f"""
             [influx2]
             url = "http://localhost:8086"
             org = "test-org"
             token = {os.getenv("INFLUXDB_ADMIN_TOKEN")}
-            """
-        )
+            """)
 
 
 def test_write_api(create_influx_config) -> None:
     """Test the write API of InfluxDB"""
+
+    if not _is_port_open("localhost", 8086):
+        pytest.skip("InfluxDB is not running on localhost:8086")
 
     InfluxClient = InfluxDBClient("tests/integration_tests/test_config.toml")
 
