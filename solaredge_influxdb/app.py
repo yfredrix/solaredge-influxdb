@@ -1,6 +1,7 @@
 import os
-from suntime import Sun, SunTimeException
 from datetime import datetime, timedelta, timezone
+from astral import Observer
+from astral.sun import sun
 import pytz
 from loguru import logger
 
@@ -16,15 +17,16 @@ def app(
     additional_time_window: int = 60,
     timezone_str: str = "Europe/Amsterdam",
 ):
-    sun = Sun(latitude, longitude)
+    observer = Observer(latitude=latitude, longitude=longitude)
     current_time = datetime.now(timezone.utc)
     logger.debug(f"Current time: {current_time}")
     try:
-        sunrise = sun.get_sunrise_time()
-        sunset = sun.get_sunset_time()
+        sun_times = sun(observer, date=current_time.date(), tzinfo=timezone.utc)
+        sunrise = sun_times["sunrise"]
+        sunset = sun_times["sunset"]
         logger.debug(f"Sunrise: {sunrise}, Sunset: {sunset}")
 
-    except SunTimeException as e:
+    except ValueError as e:
         logger.error("Failed to retrieve sunrise/sunset times")
         raise RuntimeError("Application requires sunset and sunrise times to prevent unnecessary API calls") from e
     InfluxClient = InfluxDBClient(config_path)
@@ -70,7 +72,9 @@ def app(
                         tags,
                     )
                 else:
-                    logger.warning(f"totalActivePower is missing for inverter {inverter.serialNumber} at {telemetry_date}, skipping power write")
+                    logger.warning(
+                        f"totalActivePower is missing for inverter {inverter.serialNumber} at {telemetry_date}, skipping power write"
+                    )
                     power_point = None
 
                 voltage_fields = [
@@ -81,7 +85,9 @@ def app(
                 if telemetry.dcVoltage is not None:
                     voltage_fields.insert(0, ("dc_voltage", telemetry.dcVoltage))
                 else:
-                    logger.warning(f"dcVoltage is missing for inverter {inverter.serialNumber} at {telemetry_date}, excluding dc_voltage field")
+                    logger.warning(
+                        f"dcVoltage is missing for inverter {inverter.serialNumber} at {telemetry_date}, excluding dc_voltage field"
+                    )
                 voltage_point = InfluxClient.convert_to_point(
                     telemetry_date,
                     "solar",
