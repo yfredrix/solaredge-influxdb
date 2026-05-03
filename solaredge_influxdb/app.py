@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 import pytz
 from loguru import logger
 
-from solaredge_influxdb.solaredge import Equipment, Meter
+from solaredge_influxdb.solaredge import Equipment
 from solaredge_influxdb.influxdb import InfluxDBClient
 
 
@@ -33,7 +33,6 @@ def app(
     if sunrise - timedelta(minutes=additional_time_window) < current_time < sunset + timedelta(minutes=additional_time_window):
         logger.debug("The Sun is shining bright, let's collect some data!")
         EquipmentClient = Equipment(api_key)
-        # MeterClient = Meter(api_key)
         current_time = current_time.astimezone(_timezone)
         for inverter in EquipmentClient.inverters:
             tech_data = EquipmentClient.get_technical_data(
