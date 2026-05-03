@@ -164,3 +164,4 @@ cython_debug/
 
 # Test artifacts
 site_id.txt
+tests/integration_tests/test_config.toml
