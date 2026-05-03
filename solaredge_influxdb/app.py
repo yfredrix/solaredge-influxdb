@@ -24,9 +24,9 @@ def app(
         sunset = sun.get_sunset_time()
         logger.debug(f"Sunrise: {sunrise}, Sunset: {sunset}")
 
-    except SunTimeException:
+    except SunTimeException as e:
         logger.error("Failed to retrieve sunrise/sunset times")
-        raise Exception("Application requires sunset and sunrise times to prevent unnecessary API calls")
+        raise RuntimeError("Application requires sunset and sunrise times to prevent unnecessary API calls") from e
     InfluxClient = InfluxDBClient(config_path)
     _timezone = pytz.timezone(timezone_str)
 
