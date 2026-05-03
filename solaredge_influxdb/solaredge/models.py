@@ -4,8 +4,8 @@ from pydantic import BaseModel, NaiveDatetime
 
 class TelemetryData(BaseModel):
     date: NaiveDatetime
-    totalActivePower: Optional[float]
-    dcVoltage: Optional[float]
+    totalActivePower: Optional[float] = None
+    dcVoltage: Optional[float] = None
     groundFaultResistance: Optional[float] = None
     powerLimit: float
     totalEnergy: float
@@ -137,22 +137,30 @@ class Location(BaseModel):
     timeZone: str
 
 
+class PrimaryModule(BaseModel):
+    manufacturerName: str
+    modelName: str
+    maximumPower: float
+    temperatureCoef: float
+
+
 class Site(BaseModel):
     id: int
     name: str
     accountId: int
     status: str
     peakPower: float
-    currency: str
     installationDate: str
-    ptoDate: Optional[str]
+    ptoDate: Optional[str] = None
     notes: str
     type: str
     location: Location
     alertQuantity: Optional[int] = None
     alertSeverity: Optional[str] = None
+    highestImpact: Optional[int] = None
+    primaryModule: Optional[PrimaryModule] = None
     uris: dict
-    publicSettings: dict
+    publicSettings: Optional[dict] = None
 
 
 class SitesResponse(BaseModel):

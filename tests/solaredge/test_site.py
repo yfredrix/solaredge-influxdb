@@ -1,4 +1,3 @@
-from influxdb_client import StatusRule
 import pytest
 from solaredge_influxdb.solaredge.site import list_sites
 from solaredge_influxdb.solaredge.models import SitesResponse
@@ -40,7 +39,6 @@ def test_list_sites_success():
                     "accountId": 456,
                     "status": "Active",
                     "peakPower": 1000.0,
-                    "currency": "USD",
                     "installationDate": "2022-01-01",
                     "ptoDate": None,
                     "notes": "This is an example site.",
@@ -56,6 +54,13 @@ def test_list_sites_success():
                     },
                     "alertQuantity": None,
                     "alertSeverity": None,
+                    "highestImpact": None,
+                    "primaryModule": {
+                        "manufacturerName": "SolarEdge",
+                        "modelName": "SE400",
+                        "maximumPower": 400.0,
+                        "temperatureCoef": -0.34,
+                    },
                     "uris": {},
                     "publicSettings": {},
                 },
@@ -65,7 +70,6 @@ def test_list_sites_success():
                     "accountId": 456,
                     "status": "Active",
                     "peakPower": 1000.0,
-                    "currency": "USD",
                     "installationDate": "2022-01-01",
                     "ptoDate": None,
                     "notes": "This is an example site.",
@@ -81,6 +85,13 @@ def test_list_sites_success():
                     },
                     "alertQuantity": None,
                     "alertSeverity": None,
+                    "highestImpact": None,
+                    "primaryModule": {
+                        "manufacturerName": "SolarEdge",
+                        "modelName": "SE500",
+                        "maximumPower": 500.0,
+                        "temperatureCoef": -0.35,
+                    },
                     "uris": {},
                     "publicSettings": {},
                 },
