@@ -60,27 +60,37 @@ def app(
                     ],
                     tags,
                 )
-                power_point = InfluxClient.convert_to_point(
-                    telemetry_date,
-                    "solar",
-                    [
-                        ("ac_power", telemetry.totalActivePower / 1000),
-                    ],
-                    tags,
-                )
+                if telemetry.totalActivePower is not None:
+                    power_point = InfluxClient.convert_to_point(
+                        telemetry_date,
+                        "solar",
+                        [
+                            ("ac_power", telemetry.totalActivePower / 1000),
+                        ],
+                        tags,
+                    )
+                else:
+                    logger.warning(f"totalActivePower is missing for inverter {inverter.serialNumber} at {telemetry_date}, skipping power write")
+                    power_point = None
+
+                voltage_fields = [
+                    ("voltage_l1_to_2", telemetry.vL1To2),
+                    ("voltage_l2_to_3", telemetry.vL2To3),
+                    ("voltage_l3_to_1", telemetry.vL3To1),
+                ]
+                if telemetry.dcVoltage is not None:
+                    voltage_fields.insert(0, ("dc_voltage", telemetry.dcVoltage))
+                else:
+                    logger.warning(f"dcVoltage is missing for inverter {inverter.serialNumber} at {telemetry_date}")
                 voltage_point = InfluxClient.convert_to_point(
                     telemetry_date,
                     "solar",
-                    [
-                        ("dc_voltage", telemetry.dcVoltage),
-                        ("voltage_l1_to_2", telemetry.vL1To2),
-                        ("voltage_l2_to_3", telemetry.vL2To3),
-                        ("voltage_l3_to_1", telemetry.vL3To1),
-                    ],
+                    voltage_fields,
                     tags,
                 )
                 InfluxClient.write(energy_point, "energy")
-                InfluxClient.write(power_point, "energy_flow")
+                if power_point is not None:
+                    InfluxClient.write(power_point, "energy_flow")
                 InfluxClient.write(voltage_point, "voltage_current")
     else:
         logger.info("It's dark outside, no need to collect data")

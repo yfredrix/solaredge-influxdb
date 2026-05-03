@@ -1,0 +1,6 @@
+
+            [influx2]
+            url = "http://localhost:8086"
+            org = "test-org"
+            token = None
+            
