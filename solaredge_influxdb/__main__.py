@@ -24,6 +24,11 @@ parser.add_argument(
     type=str,
     help="API key for the SolarEdge API",
 )
+parser.add_argument(
+    "--timewindow",
+    type=int,
+    help="Optional time window (in minutes) used for solar information",
+)
 
 logger.info("Starting application; to get SolarEdge data into InfluxDB")
 

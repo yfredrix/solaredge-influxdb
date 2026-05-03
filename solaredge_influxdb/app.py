@@ -15,6 +15,7 @@ def app(
     api_key: str = os.getenv("API_KEY"),
     additional_time_window: int = 60,
     timezone_str: str = "Europe/Amsterdam",
+    timewindow: int = 15,  # Time window in minutes for collecting technical data, default is 15 minutes
 ):
     sun = Sun(latitude, longitude)
     current_time = datetime.now(timezone.utc)
@@ -37,7 +38,7 @@ def app(
         for inverter in EquipmentClient.inverters:
             tech_data = EquipmentClient.get_technical_data(
                 inverter.serialNumber,
-                current_time - timedelta(minutes=15),
+                current_time - timedelta(minutes=timewindow),
                 current_time,
             )
             if tech_data is None:
@@ -70,7 +71,9 @@ def app(
                         tags,
                     )
                 else:
-                    logger.warning(f"totalActivePower is missing for inverter {inverter.serialNumber} at {telemetry_date}, skipping power write")
+                    logger.warning(
+                        f"totalActivePower is missing for inverter {inverter.serialNumber} at {telemetry_date}, skipping power write"
+                    )
                     power_point = None
 
                 voltage_fields = [
@@ -81,7 +84,9 @@ def app(
                 if telemetry.dcVoltage is not None:
                     voltage_fields.insert(0, ("dc_voltage", telemetry.dcVoltage))
                 else:
-                    logger.warning(f"dcVoltage is missing for inverter {inverter.serialNumber} at {telemetry_date}, excluding dc_voltage field")
+                    logger.warning(
+                        f"dcVoltage is missing for inverter {inverter.serialNumber} at {telemetry_date}, excluding dc_voltage field"
+                    )
                 voltage_point = InfluxClient.convert_to_point(
                     telemetry_date,
                     "solar",
