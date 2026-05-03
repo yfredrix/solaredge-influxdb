@@ -161,3 +161,6 @@ cython_debug/
 
 # VSCode
 .vscode/
+
+# Test artifacts
+site_id.txt
