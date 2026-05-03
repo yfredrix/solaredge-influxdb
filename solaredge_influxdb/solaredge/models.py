@@ -158,7 +158,7 @@ class Site(BaseModel):
     alertQuantity: Optional[int] = None
     alertSeverity: Optional[str] = None
     highestImpact: Optional[int] = None
-    primaryModule: PrimaryModule
+    primaryModule: Optional[PrimaryModule] = None
     uris: dict
     publicSettings: Optional[dict] = None
 
