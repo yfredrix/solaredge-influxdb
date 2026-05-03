@@ -26,20 +26,14 @@ def app(
 
     except SunTimeException:
         logger.error("Failed to retrieve sunrise/sunset times")
-        raise Exception(
-            "Application requires sunset and sunrise times to prevent unnecessary API calls"
-        )
+        raise Exception("Application requires sunset and sunrise times to prevent unnecessary API calls")
     InfluxClient = InfluxDBClient(config_path)
     _timezone = pytz.timezone(timezone_str)
 
-    if (
-        sunrise - timedelta(minutes=additional_time_window)
-        < current_time
-        < sunset + timedelta(minutes=additional_time_window)
-    ):
+    if sunrise - timedelta(minutes=additional_time_window) < current_time < sunset + timedelta(minutes=additional_time_window):
         logger.debug("The Sun is shining bright, let's collect some data!")
         EquipmentClient = Equipment(api_key)
-        MeterClient = Meter(api_key)
+        # MeterClient = Meter(api_key)
         current_time = current_time.astimezone(_timezone)
         for inverter in EquipmentClient.inverters:
             tech_data = EquipmentClient.get_technical_data(
