@@ -29,6 +29,11 @@ parser.add_argument(
     type=int,
     help="Optional time window (in minutes) used for solar information",
 )
+parser.add_argument(
+    "--force",
+    action="store_true",
+    help="Collect data even outside the daylight window",
+)
 
 logger.info("Starting application; to get SolarEdge data into InfluxDB")
 
