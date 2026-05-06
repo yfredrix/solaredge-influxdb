@@ -13,11 +13,14 @@ class InfluxDBClient:
     def write(self, data: Union[str, influxdb_client.Point], bucket: str) -> None:
         """Write data to InfluxDB"""
         if isinstance(data, str):
-            record_payload = data
+            logger.debug("Writing record to InfluxDB bucket='{}': {}", bucket, data)
         else:
-            record_payload = data.to_line_protocol()
+            logger.opt(lazy=True).debug(
+                "Writing record to InfluxDB bucket='{}': {}",
+                bucket,
+                lambda: data.to_line_protocol(),
+            )
 
-        logger.debug("Writing record to InfluxDB bucket='{}': {}", bucket, record_payload)
         self.write_api.write(bucket=bucket, record=data)
 
     def convert_to_point(
