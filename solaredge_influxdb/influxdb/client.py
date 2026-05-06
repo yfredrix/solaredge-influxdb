@@ -17,7 +17,7 @@ class InfluxDBClient:
         else:
             logger.opt(lazy=True).debug(
                 "Writing record to InfluxDB bucket='{}': {}",
-                bucket,
+                lambda: bucket,
                 lambda: data.to_line_protocol(),
             )
 
