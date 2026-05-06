@@ -17,6 +17,7 @@ def app(
     additional_time_window: int = 60,
     timezone_str: str = "Europe/Amsterdam",
     timewindow: int = 15,  # Time window in minutes for collecting technical data, default is 15 minutes
+    force: bool = False,
 ):
     observer = Observer(latitude=latitude, longitude=longitude)
     current_time = datetime.now(timezone.utc)
@@ -33,7 +34,13 @@ def app(
         raise RuntimeError("Application requires sunset and sunrise times to prevent unnecessary API calls") from e
     InfluxClient = InfluxDBClient(config_path)
 
-    if sunrise - timedelta(minutes=additional_time_window) < current_time < sunset + timedelta(minutes=additional_time_window):
+    should_collect = force or sunrise - timedelta(minutes=additional_time_window) < current_time < sunset + timedelta(
+        minutes=additional_time_window
+    )
+
+    if should_collect:
+        if force:
+            logger.info("Force mode enabled, collecting data outside the daylight window")
         logger.debug("The Sun is shining bright, let's collect some data!")
         EquipmentClient = Equipment(api_key)
         current_time = current_time.astimezone(_timezone)
