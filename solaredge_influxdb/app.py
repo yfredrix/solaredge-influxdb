@@ -34,14 +34,18 @@ def app(
         raise RuntimeError("Application requires sunset and sunrise times to prevent unnecessary API calls") from e
     InfluxClient = InfluxDBClient(config_path)
 
-    should_collect = force or sunrise - timedelta(minutes=additional_time_window) < current_time < sunset + timedelta(
+    within_daylight_window = sunrise - timedelta(minutes=additional_time_window) < current_time < sunset + timedelta(
         minutes=additional_time_window
     )
+    should_collect = force or within_daylight_window
 
     if should_collect:
-        if force:
-            logger.info("Force mode enabled, collecting data outside the daylight window")
-        logger.debug("The Sun is shining bright, let's collect some data!")
+        if force and not within_daylight_window:
+            logger.info("Force mode enabled, bypassing daylight-window checks to collect data")
+        if within_daylight_window:
+            logger.debug("The Sun is shining bright, let's collect some data!")
+        else:
+            logger.debug("Collecting data because force mode is enabled")
         EquipmentClient = Equipment(api_key)
         current_time = current_time.astimezone(_timezone)
         for inverter in EquipmentClient.inverters:

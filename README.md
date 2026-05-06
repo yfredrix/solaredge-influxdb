@@ -15,7 +15,7 @@ Available CLI options:
 - `--latitude`: Latitude of the solar panels.
 - `--longitude`: Longitude of the solar panels.
 - `--api-key`: API key for the SolarEdge API.
-- `--timewindow`: Optional time window in minutes used for solar information.
+- `--timewindow`: Optional time window in minutes used for the technical-data lookback window.
 - `--force`: Collect data even outside the daylight window.
 
 Examples:
