@@ -2,6 +2,7 @@ from datetime import datetime
 import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
 from typing import Union, List, Tuple, Optional
+from loguru import logger
 
 
 class InfluxDBClient:
@@ -9,8 +10,14 @@ class InfluxDBClient:
         self.client = influxdb_client.InfluxDBClient.from_config_file(path)
         self.write_api = self.client.write_api(write_options=SYNCHRONOUS)
 
-    def write(self, data: str, bucket: str) -> None:
+    def write(self, data: Union[str, influxdb_client.Point], bucket: str) -> None:
         """Write data to InfluxDB"""
+        if isinstance(data, str):
+            record_payload = data
+        else:
+            record_payload = data.to_line_protocol()
+
+        logger.debug("Writing record to InfluxDB bucket='{}': {}", bucket, record_payload)
         self.write_api.write(bucket=bucket, record=data)
 
     def convert_to_point(
