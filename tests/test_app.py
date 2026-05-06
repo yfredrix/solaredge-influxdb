@@ -19,17 +19,19 @@ def _build_telemetry():
     )
 
 
+@patch("solaredge_influxdb.app.get_sunset")
+@patch("solaredge_influxdb.app.get_sunrise")
 @patch("solaredge_influxdb.app.datetime")
 @patch("solaredge_influxdb.app.InfluxDBClient")
 @patch("solaredge_influxdb.app.Equipment")
-@patch("solaredge_influxdb.app.Sun")
-def test_app_skips_collection_after_sundown(mock_sun, mock_equipment, mock_influxdb_client, mock_datetime):
-    current_time = datetime(2026, 5, 6, 22, 0, 0, tzinfo=timezone.utc)
-    sunrise = datetime(2026, 5, 6, 5, 0, 0, tzinfo=timezone.utc)
-    sunset = datetime(2026, 5, 6, 18, 0, 0, tzinfo=timezone.utc)
+def test_app_skips_collection_after_sundown(mock_equipment, mock_influxdb_client, mock_datetime, mock_get_sunrise, mock_get_sunset):
+    # 20:00 UTC = 22:00 CEST, which is still May 6 in Amsterdam and after sunset
+    current_time = datetime(2026, 5, 6, 20, 0, 0, tzinfo=timezone.utc)
+    sunrise = datetime(2026, 5, 6, 3, 30, 0, tzinfo=timezone.utc)
+    sunset = datetime(2026, 5, 6, 17, 0, 0, tzinfo=timezone.utc)
     mock_datetime.now.return_value = current_time
-    mock_sun.return_value.get_sunrise_time.return_value = sunrise
-    mock_sun.return_value.get_sunset_time.return_value = sunset
+    mock_get_sunrise.return_value = sunrise
+    mock_get_sunset.return_value = sunset
 
     app(api_key="api-key")
 
@@ -37,14 +39,16 @@ def test_app_skips_collection_after_sundown(mock_sun, mock_equipment, mock_influ
     mock_influxdb_client.return_value.write.assert_not_called()
 
 
+@patch("solaredge_influxdb.app.get_sunset")
+@patch("solaredge_influxdb.app.get_sunrise")
 @patch("solaredge_influxdb.app.datetime")
 @patch("solaredge_influxdb.app.InfluxDBClient")
 @patch("solaredge_influxdb.app.Equipment")
-@patch("solaredge_influxdb.app.Sun")
-def test_app_collects_after_sundown_when_forced(mock_sun, mock_equipment, mock_influxdb_client, mock_datetime):
-    current_time = datetime(2026, 5, 6, 22, 0, 0, tzinfo=timezone.utc)
-    sunrise = datetime(2026, 5, 6, 5, 0, 0, tzinfo=timezone.utc)
-    sunset = datetime(2026, 5, 6, 18, 0, 0, tzinfo=timezone.utc)
+def test_app_collects_after_sundown_when_forced(mock_equipment, mock_influxdb_client, mock_datetime, mock_get_sunrise, mock_get_sunset):
+    # 20:00 UTC = 22:00 CEST, which is still May 6 in Amsterdam and after sunset
+    current_time = datetime(2026, 5, 6, 20, 0, 0, tzinfo=timezone.utc)
+    sunrise = datetime(2026, 5, 6, 3, 30, 0, tzinfo=timezone.utc)
+    sunset = datetime(2026, 5, 6, 17, 0, 0, tzinfo=timezone.utc)
     telemetry = _build_telemetry()
     equipment_client = Mock()
     equipment_client.inverters = [SimpleNamespace(serialNumber="INV-1", model="SE5000")]
@@ -53,8 +57,8 @@ def test_app_collects_after_sundown_when_forced(mock_sun, mock_equipment, mock_i
     influx_client.convert_to_point.side_effect = ["energy-point", "power-point", "voltage-point"]
 
     mock_datetime.now.return_value = current_time
-    mock_sun.return_value.get_sunrise_time.return_value = sunrise
-    mock_sun.return_value.get_sunset_time.return_value = sunset
+    mock_get_sunrise.return_value = sunrise
+    mock_get_sunset.return_value = sunset
     mock_equipment.return_value = equipment_client
 
     app(api_key="api-key", force=True)
