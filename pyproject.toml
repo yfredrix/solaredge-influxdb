@@ -6,7 +6,7 @@ authors = ["Yorick Fredrix <yorick.fredrix@outlook.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
 requests = "^2.31.0"
 influxdb-client = "^1.40.0"
 pydantic = "^2.6.1"
