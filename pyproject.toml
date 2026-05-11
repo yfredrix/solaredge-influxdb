@@ -15,8 +15,8 @@ pytz = ">=2024.1,<2027.0"
 astral = "^3.2"
 
 [tool.poetry.group.dev.dependencies]
-black = ">=24.2,<26.0"
-pytest = "^8.0.1"
+black = ">=24.2,<27.0"
+pytest = ">=8.0.1,<10.0.0"
 flake8 = "^7.0.0"
 
 [build-system]
