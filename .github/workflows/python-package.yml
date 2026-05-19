@@ -54,14 +54,8 @@ jobs:
           -e DOCKER_INFLUXDB_INIT_PASSWORD=password \
           -e DOCKER_INFLUXDB_INIT_ORG=test-org \
           -e DOCKER_INFLUXDB_INIT_BUCKET=test \
+          -e DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=integration-test-token \
           influxdb:latest
-      env:
-        DOCKER_INFLUXDB_INIT_MODE: "setup"
-        DOCKER_INFLUXDB_INIT_USERNAME: "admin"
-        DOCKER_INFLUXDB_INIT_PASSWORD: "password"
-        DOCKER_INFLUXDB_INIT_ORG: "test-org"
-        DOCKER_INFLUXDB_INIT_BUCKET: "test"
-
 
     - name: Wait for InfluxDB to be ready
       run: |
@@ -71,11 +65,7 @@ jobs:
           fi
           sleep 2
         done
-    
-    - name: Collect InfluxDB Admin Token
-      run: |
-        echo "INFLUXDB_ADMIN_TOKEN=$(docker exec influx influx auth list --org test-org | grep admin | awk '{print $4}')" >> $GITHUB_ENV
-        
+
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
@@ -90,7 +80,7 @@ jobs:
       run: |
         poetry run pytest tests/integration_tests
       env:
-        INFLUXDB_ADMIN_TOKEN: ${{ env.INFLUXDB_ADMIN_TOKEN }}
+        INFLUXDB_ADMIN_TOKEN: integration-test-token
         
   build_and_publish:
     if: github.ref == 'refs/heads/main'
