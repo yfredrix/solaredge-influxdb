@@ -18,12 +18,15 @@ def _is_port_open(host: str, port: int, timeout: float = 0.5) -> bool:
 @pytest.fixture(scope="module")
 def create_influx_config() -> None:
     """Create a config file for InfluxDB"""
+    token = os.getenv("INFLUXDB_ADMIN_TOKEN")
+    if not token:
+        pytest.skip("INFLUXDB_ADMIN_TOKEN environment variable is not set")
     with open("tests/integration_tests/test_config.toml", "w") as f:
         f.write(f"""
             [influx2]
             url = "http://localhost:8086"
             org = "test-org"
-            token = {os.getenv("INFLUXDB_ADMIN_TOKEN")}
+            token = "{token}"
             """)
 
 
