@@ -40,6 +40,8 @@ jobs:
   integrationTest:
     runs-on: ubuntu-latest
     needs: test
+    env:
+      INFLUXDB_ADMIN_TOKEN: integration-test-token
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -54,7 +56,7 @@ jobs:
           -e DOCKER_INFLUXDB_INIT_PASSWORD=password \
           -e DOCKER_INFLUXDB_INIT_ORG=test-org \
           -e DOCKER_INFLUXDB_INIT_BUCKET=test \
-          -e DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=integration-test-token \
+          -e DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${{ env.INFLUXDB_ADMIN_TOKEN }} \
           influxdb:latest
 
     - name: Wait for InfluxDB to be ready
@@ -79,8 +81,6 @@ jobs:
     - name: Run integration tests
       run: |
         poetry run pytest tests/integration_tests
-      env:
-        INFLUXDB_ADMIN_TOKEN: integration-test-token
         
   build_and_publish:
     if: github.ref == 'refs/heads/main'
